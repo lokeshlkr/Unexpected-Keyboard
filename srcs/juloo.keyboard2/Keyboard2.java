@@ -1,5 +1,7 @@
 package juloo.keyboard2;
 
+import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import juloo.cdict.Cdict;
 import juloo.keyboard2.dict.Dictionaries;
@@ -475,6 +478,9 @@ public class Keyboard2 extends InputMethodService
         case SWITCH_VOICE_TYPING_CHOOSER:
           VoiceImeSwitcher.choose_voice_ime(Keyboard2.this, get_imm(),
               Config.globalPrefs());
+          break;
+        case HIDE_SELF:
+          Keyboard2.this.requestHideSelf(0);
           break;
       }
     }
