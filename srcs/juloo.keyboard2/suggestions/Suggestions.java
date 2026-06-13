@@ -44,7 +44,17 @@ public final class Suggestions
     if (word.length() < 2 || _config.current_dictionary == null)
       clear();
     else
-      query_suggestions(word);
+        if(word.startsWith(":") && word.length()>2){
+            String[] ss = query_emojis(word.substring(1));
+            suggestions[0]=ss[0];
+            suggestions[1]=ss[1];
+            suggestions[2]=ss[2];
+            count = 3;
+            emoji_suggestion = ss[3];
+        }
+        else{
+            query_suggestions(word);
+        }
     set_suggestions();
   }
 
@@ -62,13 +72,14 @@ public final class Suggestions
     word = apply_substitutions(word);
     Cdict.Result r = dict.find(word);
     int i = 0;
-    if (r.found)
-      suggestions[i++] = dict.word(r.index);
-    int[] suffixes = dict.suffixes(r, MAX_COUNT);
+//    if (r.found)
+//      suggestions[i++] = dict.word(r.index);
+    int start_distance = 1;
+    int[] suffixes = dict.suffixes(r, MAX_COUNT+start_distance);
     // Disable distance search for small words
     int[] dist = (word.length() < 3 || i + 1 >= MAX_COUNT) ? NO_RESULTS :
-      dict.distance(word, 1, MAX_COUNT);
-    for (int j = 0; j < MAX_COUNT && i < MAX_COUNT; j++)
+      dict.distance(word, 1, MAX_COUNT+start_distance);
+    for (int j = 1; j < MAX_COUNT+start_distance && i < MAX_COUNT; j++)
     {
       if (suffixes.length > j)
         suggestions[i++] = dict.word(suffixes[j]);
@@ -96,12 +107,28 @@ public final class Suggestions
     if (dict == null || word.length() < 3)
       return null;
     Cdict.Result r = dict.find(word);
-    if (r.found)
-      return dict.word(r.index);
     int[] s = dict.suffixes(r, 1);
     if (s.length > 0)
       return dict.word(s[0]);
     return null;
+  }
+  String[] query_emojis(String word)
+  {
+    Cdict dict = _config.emoji_dictionary;
+    String[] res = {null,null,null,null};
+    Cdict.Result r = dict.find(word);
+    int[] a = dict.suffixes(r, 4);
+    int[] b = dict.distance(word,2, 3);
+    int[] c = dict.distance(word,3, 3);
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    for(int idx=0; idx < res.length; idx++){
+      if((res[idx] == null || res[idx].isEmpty()) && i<a.length){res[idx]=dict.word(a[i++]);}
+      if((res[idx] == null || res[idx].isEmpty()) && j<b.length){res[idx]=dict.word(b[j++]);}
+      if((res[idx] == null || res[idx].isEmpty()) && k<c.length){res[idx]=dict.word(c[k++]);}
+    }
+    return res;
   }
 
   /** Apply the same substitutions that were used when building the

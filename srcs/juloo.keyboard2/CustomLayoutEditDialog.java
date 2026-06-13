@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.Layout;
@@ -20,6 +21,8 @@ public class CustomLayoutEditDialog
   {
     final LayoutEntryEditText input = new LayoutEntryEditText(ctx);
     input.setText(initial_text);
+    input.setTypeface(Typeface.MONOSPACE);
+    input.setTextSize(14.0f);
     AlertDialog.Builder dialog = new AlertDialog.Builder(ctx)
       .setView(input)
       .setTitle(R.string.pref_custom_layout_title)
@@ -85,6 +88,7 @@ public class CustomLayoutEditDialog
       super(ctx);
       _ln_paint = new Paint(getPaint());
       _ln_paint.setTextSize(_ln_paint.getTextSize() * 0.8f);
+      _ln_paint.setTypeface(Typeface.MONOSPACE);
       setHorizontallyScrolling(true);
       setInputType(InputType.TYPE_CLASS_TEXT
           | InputType.TYPE_TEXT_FLAG_MULTI_LINE);

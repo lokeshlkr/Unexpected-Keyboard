@@ -225,7 +225,7 @@ public final class CurrentlyTypedWord
       returns [true]. */
   public static boolean is_word_char(int c)
   {
-    return Character.isLetterOrDigit(c) || (c == '\'');
+    return Character.isLetterOrDigit(c) || (c == '\'') || (c == ':');
   }
 
   public static interface Callback

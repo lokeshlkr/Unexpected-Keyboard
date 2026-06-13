@@ -135,9 +135,9 @@ public final class KeyEventHandler
   {
     String old = _typedword.get();
     int cur_rel = _typedword.cursor_relative();
-    replace_surrounding_text(old.length() + cur_rel, -cur_rel, text + " ");
+    replace_surrounding_text(old.length() + cur_rel, -cur_rel, text);
     last_replaced_word = old;
-    last_replacement_word_len = text.length() + 1;
+    last_replacement_word_len = text.length();
     _next_last_action = LastAction.SUGGESTION_ENTERED;
   }
 
